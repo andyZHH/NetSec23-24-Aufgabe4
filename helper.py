@@ -270,6 +270,10 @@ def make_submission(user_annotations, ids, class_label_pairs, filepath):
     print("Submission file is created as .{}\n".format(filepath[filepath.find("/results"):]))
 
 
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import metrics
+
 def plot_confusion_matrix(directory, y_true, y_pred, classes, normalize=False, title=None, cmap=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
@@ -278,11 +282,13 @@ def plot_confusion_matrix(directory, y_true, y_pred, classes, normalize=False, t
     # Compute confusion matrix
     cm = metrics.confusion_matrix(y_true, y_pred)
     n_classes = cm.shape[0]
+    
     if n_classes == 2:
-        detectionRate = cm[1,1]/(cm[1,0]+cm[1,1])
-        falseAlarmRate = cm[0,1]/(cm[0,0]+cm[0,1])
+        detectionRate = cm[1, 1] / (cm[1, 0] + cm[1, 1])
+        falseAlarmRate = cm[0, 1] / (cm[0, 0] + cm[0, 1])
         print("TPR: \t\t\t{:.5f}".format(detectionRate))
         print("FAR: \t\t\t{:.5f}".format(falseAlarmRate))
+        
         if not title:
             if normalize:
                 title = 'Normalized confusion matrix\nTPR:{:5f} - FAR:{:.5f}'.format(detectionRate, falseAlarmRate)
@@ -290,65 +296,51 @@ def plot_confusion_matrix(directory, y_true, y_pred, classes, normalize=False, t
                 title = 'Confusion matrix, without normalization\nTPR:{:.5f} - FAR:{:.5f}'.format(detectionRate, falseAlarmRate)
     else:
         F1_ = metrics.f1_score(y_true, y_pred, average="weighted")
-        #for c in range(cm.shape[0]):
-        #    print(classes[c], metrics.average_precision_score(one_hot(y_true, n_classes)[:,c], one_hot(y_pred, n_classes)[:,c], average="weighted"))
-        mAP = np.mean(np.asarray([(metrics.average_precision_score(one_hot(y_true, n_classes)[:,c], one_hot(y_pred, n_classes)[:,c], average="weighted")) for c in range(cm.shape[0])]))
+        mAP = np.mean(np.asarray([(metrics.average_precision_score(one_hot(y_true, n_classes)[:, c], one_hot(y_pred, n_classes)[:, c], average="weighted")) for c in range(cm.shape[0])]))
         print("F1: \t\t\t{:.5f}".format(F1_))
         print("mAP: \t\t\t{:.5f}".format(mAP))
+        
         if not title:
             if normalize:
                 title = 'Normalized confusion matrix\nF1:{:5f} - mAP:{:.5f}'.format(F1_, mAP)
             else:
                 title = 'Confusion matrix, without normalization\nF1:{:.5f} - mAP:{:.5f}'.format(F1_, mAP)
-    
 
     # Only use the labels that appear in the data
-    #classes = classes[unique_labels(y_true, y_pred)]
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        #print("Normalized confusion matrix")
-    #else:
-        #print('Confusion matrix, without normalization')
 
-    #print(cm)
+    # Increase figure size for better readability
+    fig, ax = plt.subplots(figsize=(10, 8))
 
-    fig, ax = plt.subplots()
-    im = ax.imshow(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], interpolation='nearest', cmap=cmap)
-    #ax.figure.colorbar(im, ax=ax)
-    # We want to show all ticks...
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]),
-           # ... and label them with the respective list entries
            xticklabels=classes, yticklabels=classes,
            title=title,
            ylabel='True label',
            xlabel='Predicted label')
 
-    # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-             rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
     # Loop over data dimensions and create text annotations.
-    if n_classes < 4: # larger numbers cause too many digits on the confusion matrix
-        fnt = 16
-    elif n_classes < 8:
-        fnt = 10
-    else:
-        fnt = max(4, 16-n_classes)
-
+    fnt = 12  # Adjust font size as needed
     fmt = '.2f' if normalize else 'd'
     thresh = np.sum(cm, axis=1) * 0.66
+
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            if cm[i,j] != 0:
+            if cm[i, j] != 0:
                 ax.text(j, i, format(cm[i, j], fmt),
                         ha="center", va="center",
-                        fontsize = fnt,
+                        fontsize=fnt,
                         color="white" if cm[i, j] > thresh[i] else "black")
 
     fig.tight_layout()
-    fig.savefig(directory+"/CM.png", bbox_inches='tight')
+    fig.savefig(directory + "/CM.png", bbox_inches='tight')
     print("Confusion matrix is saved as .{}/CM.png\n".format(directory[directory.find("/results"):]))
-
+    
     return ax, cm
+
 

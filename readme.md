@@ -17,7 +17,6 @@ set with a JSON file containing the results in the correct format described on t
 
 ## Overview
 
-- NetML dataset is constructed by selecting several PCAP files from www.stratosphereips.org website.
 - non-vpn2016 dataset is the subset of ISCX-VPN-nonVPN2016 dataset from https://www.unb.ca/cic/datasets/vpn.html
 For non-vpn2016, three level of annotations are available: top-level, mid-level and fine-grained. Annotations on the training sets are publicly available.
 
@@ -71,6 +70,11 @@ We recommend you to use virtual environment. For details please see https://docs
 
 ```shell
 $ git clone https://github.com/andyZHH/NetSec23-24-Aufgabe4.git
+```
+
+reference Repository NetML-Competition2020:
+```shell
+$ git clone https://github.com/ACANETS/NetML-Competition2020.git
 ```
 
 ### Usage Example

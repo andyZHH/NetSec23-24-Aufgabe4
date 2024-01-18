@@ -1,6 +1,6 @@
 # internet_traffic_classification
 
-## task
+## task A 
 In this task, here are required to leverage machine learning techniques to distinguish applications in a fine-grained fashion among network flows. There are 3 levels of granularity:
 (1) 5- non-vpn2016_toplevel_dev - here will use non-vpn2016 training dataset to train one
 own model using top-level annotations (chat, audio, video, etc..) and submit the predictions on the non-vpn2016 test-std set with a JSON file containing your results in the
@@ -13,6 +13,10 @@ in the correct format described on the evaluation page.
 one own model using fine-grained annotations (facebook_audio, facebook_chat, skype_audio, skype_chat, etc..) and submit the predictions on the non-vpn2016 test-std
 set with a JSON file containing the results in the correct format described on the evaluation page.
 
+## task B 
+
+This task is based on the dataset that was presented in the paper - “SASA: Source-Aware
+Self-Attention for IP Hijack Detection” (project page, code).
 ----------------
 
 ## Overview
@@ -20,6 +24,9 @@ set with a JSON file containing the results in the correct format described on t
 - non-vpn2016 dataset is the subset of ISCX-VPN-nonVPN2016 dataset from https://www.unb.ca/cic/datasets/vpn.html
 For non-vpn2016, three level of annotations are available: top-level, mid-level and fine-grained. Annotations on the training sets are publicly available.
 
+for task B : 
+ please download the dataset from https://drive.google.com/drive/folders/1tsVNEcDiufnkGktDkLA8YPWARxNzsZTR
+ 
 ----------------
 
 ## Reference
@@ -210,3 +217,5 @@ overall = TPR\*(1-FAR)
 ## License
 
 BSD
+
+
